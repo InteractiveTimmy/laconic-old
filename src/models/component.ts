@@ -1,6 +1,7 @@
-import { toCase } from '../utils/index';
+import Fragment from './fragment';
 
-export default class Component extends HTMLElement {
+export default class Component extends Fragment {
+  /*
   protected readonly pClasses: string[];
   protected readonly pParent: HTMLElement;
   protected readonly pRoot: HTMLElement; // TODO - update this to proper root container
@@ -71,7 +72,6 @@ export default class Component extends HTMLElement {
   }
 
   private connectedCallback(): void {
-
     this.render();
   }
 
@@ -83,4 +83,5 @@ export default class Component extends HTMLElement {
 
     window.customElements.define(elmName, elementClass.constructor);
   }
+  */
 }
