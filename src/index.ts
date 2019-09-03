@@ -1,11 +1,7 @@
 import {
-  Component,
-  Fragment,
-  Core,
+  Element,
 } from './models/index';
 
 export default {
-  Component,
-  Fragment,
-  Core,
+  Element,
 };

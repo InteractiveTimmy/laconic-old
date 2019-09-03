@@ -1,9 +1,5 @@
-import Component from './component';
-import Fragment from './fragment';
-import Core from './core';
+import Element from './element';
 
 export {
-  Component,
-  Fragment,
-  Core,
+  Element,
 };
