@@ -1,40 +1,83 @@
 import { toCase } from '../utils/index';
 
-export default class Element extends HTMLElement {
+export default abstract class Element extends HTMLElement {
   private pChildren: HTMLElement[];
   private pObserver: MutationObserver;
   private pParent: HTMLElement;
   private pRoot: HTMLElement;
   private pProps: Record<string, string>;
   private pState: Record<string, string>;
+  private pStatus: Record<string, boolean>;
 
-  public initialize: () => void = () => null;
-  public rendered: () => void = () => null;
-  public updated: () => void = () => null;
-  public removed: () => void = () => null;
-  public render: () => string = () => '';
+  protected abstract rendered?(): void;
+  protected abstract updated?(): void;
+  protected abstract removed?(): void;
 
   public static propTypes: Record<string, string> = {};
 
   public constructor() {
     super();
 
+    this.pChildren = [];
     this.pProps = {};
     this.pState = {};
+    this.pStatus = {};
+  }
+
+  protected render(): string {
+    return this.pChildren.map((child): string => child.outerHTML).join('\n');
   }
 
   protected get parent(): HTMLElement { return this.pParent; }
+  protected get props(): Record<string, string> { return { ...this.pProps }; }
   protected get root(): HTMLElement { return this.pRoot; }
 
   protected get state(): Record<string, string> { return { ...this.pState }; }
-  protected get props(): Record<string, string> { return { ...this.pProps }; }
+  protected set state(state: Record<string, string>) {
+    if (this.pStatus.initialized) {
+      throw new Error('cannot set state using this class member after initialization');
+    }
+    this.pState = state;
+  }
 
   private static get observedAttributes(): string[] {
     return Object.keys(this.propTypes);
   }
 
-  private propsUpdated(): void { this.updated(); }
-  private stateUpdated(): void { this.updated(); }
+  private trigger(e: 'removed' | 'render' | 'rendered' | 'updated'): void {
+    switch (e) {
+      case 'removed':
+        if (this.removed) { this.removed(); }
+        break;
+
+      case 'render':
+        if (this.pStatus.initialized) {
+          this.innerHTML = this.render();
+          this.trigger('rendered');
+        }
+        break;
+
+      case 'rendered':
+        if (this.rendered) { this.rendered(); }
+        break;
+
+      case 'updated':
+        if (this.updated) { this.updated(); }
+        break;
+
+      default:
+    }
+  }
+
+  private propsUpdated(): void {
+    this.trigger('updated');
+    this.trigger('render');
+  }
+
+  private stateUpdated(): void {
+    this.trigger('updated');
+    this.trigger('render');
+  }
 
   protected setState(newState: Record<string, string>): void {
     Object.keys(newState).forEach((key): void => {
@@ -55,19 +98,15 @@ export default class Element extends HTMLElement {
     return parent;
   }
 
-  private attributeChangedCallback(): void {
-    console.log('changed');
-    this.mapAttributes();
-    this.propsUpdated();
-  }
-
   private connectedCallback(): void {
     this.mapObservers();
     this.mapAttributes();
-    this.initialize();
-    this.innerHTML = this.render();
-    this.rendered();
+
     this.pRoot = this.findRoot();
+
+    this.pStatus.initialized = true;
+
+    this.trigger('render');
   }
 
   private mapAttributes(): void {
@@ -79,21 +118,28 @@ export default class Element extends HTMLElement {
       if (['id', 'class', 'style'].includes(attribute.name)) { return; }
       this.pProps[attribute.name] = attribute.value;
     });
+
+    if (!this.pStatus.initialized) { this.propsUpdated(); }
   }
 
-  private mapChildren(): void {
+  private mapChildren(): this {
+    this.pChildren = Array.from(this.children).map((child): HTMLElement => child as HTMLElement);
 
+    return this;
   }
 
   private mapObservers(): void {
-    this.pObserver = new MutationObserver((mutations: MutationRecord[], observer: MutationObserver): void => {
+    this.pObserver = new MutationObserver((mutations: MutationRecord[]): void => {
       mutations.forEach((mutation): void => {
         switch (mutation.type) {
-          case 'attributes': break;
-          case 'children': break;
+          case 'attributes': this.mapAttributes(); break;
+          case 'childList': this.mapChildren(); break;
+          default:
         }
-      })
+      });
     });
+
+    this.pObserver.observe(this, { attributes: true, childList: true });
   }
 
   public static registerElement(elmConstructor: Function, name?: string): void {
