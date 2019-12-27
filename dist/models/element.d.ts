@@ -1,0 +1,30 @@
+export default abstract class Element extends HTMLElement {
+    private pChildren;
+    private pObserver;
+    private pParent;
+    private pRoot;
+    private pProps;
+    private pState;
+    private pStatus;
+    protected abstract rendered?(): void;
+    protected abstract updated?(): void;
+    protected abstract removed?(): void;
+    static propTypes: Record<string, string>;
+    constructor();
+    protected render(): string;
+    protected readonly parent: HTMLElement;
+    protected readonly props: Record<string, string>;
+    protected readonly root: HTMLElement;
+    protected state: Record<string, string>;
+    private static readonly observedAttributes;
+    private trigger;
+    private propsUpdated;
+    private stateUpdated;
+    protected setState(newState: Record<string, string>): void;
+    private findRoot;
+    private connectedCallback;
+    private mapAttributes;
+    private mapChildren;
+    private mapObservers;
+    static registerElement(elmConstructor: Function, name?: string): void;
+}

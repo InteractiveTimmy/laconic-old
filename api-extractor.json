@@ -1,0 +1,16 @@
+{
+  "apiReport": {
+    "enabled": false
+  },
+  "docModel": {
+    "enabled": true,
+    "apiJsonFilePath": "<projectFolder>/docs/<unscopedPackageName>.docs.json"
+  },
+  "dtsRollup": {
+    "enabled": false
+  },
+  "mainEntryPointFilePath": "<projectFolder>/dist/index.d.ts",
+  "tsdocMetadata": {
+    "enabled": false
+  }
+}

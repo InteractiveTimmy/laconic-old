@@ -1,0 +1,43 @@
+{
+  "name": "laconic",
+  "version": "0.0.1",
+  "description": "Small and Elegant Web Component Framework",
+  "main": "index.js",
+  "scripts": {
+    "build": "node ./scripts/index.js build",
+    "compile": "rollup -c rollup.config.js",
+    "compile:watch": "rollup -c rollup.config.js --watch",
+    "docs": "api-extractor run",
+    "lint": "eslint ./src/** ./test/**",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "transpile": "tsc",
+    "transpile:watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InteractiveTimmy/laconic.git"
+  },
+  "author": "Timothy Scheuering",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/InteractiveTimmy/laconic/issues"
+  },
+  "homepage": "https://github.com/InteractiveTimmy/laconic#readme",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@microsoft/api-extractor": "^7.3.8",
+    "@microsoft/tsdoc": "^0.12.12",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "babel-jest": "^24.8.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "jest": "^24.8.0",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.19.4",
+    "typescript": "^3.5.3"
+  }
+}

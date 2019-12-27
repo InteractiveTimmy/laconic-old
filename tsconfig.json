@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
+    "declaration": true,
+    "module": "es6",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "outDir": "./dist",
+    "preserveConstEnums": true,
+    "target": "es2017"
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
+}

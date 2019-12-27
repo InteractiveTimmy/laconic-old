@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <script type="text/javascript" src="laconic.js"></script>
+  </head>
+  <body>
+    <script>
+      class CustomElement extends Laconic.Element {
+        constructor() {
+          super();
+
+          this.state = {
+            action1: 'make',
+            action2: 'buy',
+            target1: 'bread',
+            target2: 'houses',
+          };
+
+          setTimeout(() => {
+            this.setState({
+              action1: 'spend',
+              action2: 'go',
+              target1: 'money',
+              target2: 'brankrupt',
+            });
+          }, 3000);
+        }
+
+        render() {
+          const { action, target, title } = this.props;
+          const { action1, action2, target1, target2 } = this.state;
+
+          return (
+            `
+              <h1>${title}</h1>
+              <sub-custom-element action=${action1} target=${target1}></sub-custom-element>
+              <sub-custom-element action=${action2} target=${target2}></sub-custom-element>
+            `
+          );
+        }
+      }
+
+      class SubCustomElement extends Laconic.Element {
+        render() {
+          const { action, target } = this.props;
+
+          return (
+            `${target} - ${action}`
+          );
+        }
+      }
+
+      Laconic.Element.registerElement(CustomElement);
+      Laconic.Element.registerElement(SubCustomElement);
+    </script>
+    <custom-element title="Example Title">
+    </custom-element>
+  </body>
+</html>
